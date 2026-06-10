@@ -48,8 +48,13 @@ Dans ton app registration Microsoft :
 
 ## 4. Lancer le test
 
+Important : lance Streamlit depuis le dossier du sandbox. Streamlit cherche
+`.streamlit/secrets.toml` dans le dossier courant, donc lancer l'app depuis la
+racine du repo ne charge pas `sandbox/streamlit_oidc_test/.streamlit/secrets.toml`.
+
 ```bash
-streamlit run sandbox/streamlit_oidc_test/app.py
+cd sandbox/streamlit_oidc_test
+streamlit run app.py
 ```
 
 ## 5. Ce que tu verras
