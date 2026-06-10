@@ -3,10 +3,12 @@ cache
 logs
 backup
 data
-
+.venv
 .env
 .db
+.toml
 .sql
 .xlsx
 .docx
 .json
+sandbox/streamlit_oidc_test/.streamlit/secrets.toml

@@ -78,7 +78,7 @@ def decode_token (token : str) -> List[Dict[str, Any]] :
     return decoded
 
 
-def send_mail (
+def send_email (
         
         token : Optional[str] = None,
         
