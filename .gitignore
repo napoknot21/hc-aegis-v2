@@ -4,10 +4,10 @@ logs
 backup
 data
 .toml
+.log
 .venv
 .env
 .db
-.toml
 .sql
 .xlsx
 .docx
