@@ -56,7 +56,14 @@ def header (
     return None
 
 
-def sidebar (groupes : List[Dict[str, str]], title : str = "", logo_header_path : Optional[str] = None, styles : Optional[Dict] = None) :
+def sidebar (
+        
+        groupes : List[Dict[str, str]],
+        title : str = "",
+        logo_header_path : Optional[str] = None,
+        styles : Optional[Dict] = None
+    
+    ) :
     """
     From a group of tabs, it will create a graphical sidebar
     """
@@ -81,6 +88,11 @@ def sidebar (groupes : List[Dict[str, str]], title : str = "", logo_header_path 
         st.cache_data.clear()
 
         footer_aegis("http://localhost:9999")
+
+        if st.user.is_logged_in :
+            
+            if st.button("Logout"):
+                st.logout()
 
     # update query params for deep linking
     st.query_params["page"] = selected

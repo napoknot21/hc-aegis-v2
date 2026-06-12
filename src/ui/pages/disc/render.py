@@ -13,8 +13,11 @@ from src.ui.pages.disc.updater import updater
 
 discretionary_subpages = [
 
-    {"name" : "Controls",       "page" : controls,  "icon" : "cash-coin"},
-    {"name" : "Updater",        "page" : updater,   "icon" : "eye"},
+    {"name" : "Booker IA",           "page" : controls,  "icon" : "currency-exchange"},
+    {"name" : "Deleter",             "page" : controls,  "icon" : "archive-fill"},
+    {"name" : "Updater",             "page" : updater,   "icon" : "node-plus-fill"},
+    {"name" : "Viewer",              "page" : controls,  "icon" : "file-spreadsheet-fill"},
+    {"name" : "Regulatory Controls", "page" : controls,  "icon" : "file-spreadsheet-fill"},
 
 ]
 
@@ -22,7 +25,7 @@ discretionary_subpages = [
 
 def render_disc (
 
-        title : Optional[str] = "Discretionary Management",
+        title : Optional[str] = "",
         subtitle : Optional[str] = None,
         fundation_map : Optional[Dict] = None
 
