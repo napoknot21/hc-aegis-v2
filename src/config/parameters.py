@@ -36,3 +36,23 @@ AEGIS_LOGGER_FILE_PREFIX = "aegis"
 AEGIS_LOGGER_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 AEGIS_LOGGER_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
+
+
+# ----------------- AEGIS UI - Controls ------------------
+
+AEGIS_DISC_CONTROLS_SUB_MENUS = [
+
+    {"menu" : "Leverage", "icon" : "📐"},
+    {"menu" : "VaR & SIMM", "icon" : "📈"},
+    {"menu" : "P&L", "icon" : "📉"},
+    {"menu" : "Counterparty", "icon" : "💼"},
+    {"menu" : "Credit", "icon" : "💳"},
+    {"menu" : "Operational", "icon" : "⚙️"},
+    {"menu" : "ESG", "icon" : "🌱"},
+    {"menu" : "Breach Validation", "icon" : "✔️"},
+    {"menu" : "Risks Graphs and Stats", "icon" : "📊"}
+
+]
+
+
+
