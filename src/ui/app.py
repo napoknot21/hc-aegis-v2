@@ -5,6 +5,8 @@ import streamlit as st
 from pathlib import Path
 from typing import Optional
 
+from src.config.startup import validate_startup_config, setup
+
 from src.ui.components.layout import sidebar
 from src.ui.styles.base import risk_menu
 
@@ -33,6 +35,7 @@ def app (
     """
     
     """
+
     if not st.user.is_logged_in :
 
         st.title("Heroics Aegis")
