@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime as dt
 from typing import Optional, List
 
-from src.utils.formater import date_to_str, str_to_date
+from utils.formatter import date_to_str, str_to_date
 
 
 def get_previous_bussiness_day (

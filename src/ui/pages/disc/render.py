@@ -7,13 +7,14 @@ from streamlit_option_menu import option_menu
 
 from typing import Optional, Dict
 
+from src.ui.pages.disc.booker import booker
 from src.ui.pages.disc.controls import controls
 from src.ui.pages.disc.updater import updater
 
 
 discretionary_subpages = [
 
-    {"name" : "Booker IA",           "page" : controls,  "icon" : "currency-exchange"},
+    {"name" : "Booker IA",           "page" : booker,    "icon" : "currency-exchange"},
     {"name" : "Deleter",             "page" : controls,  "icon" : "archive-fill"},
     {"name" : "Updater",             "page" : updater,   "icon" : "node-plus-fill"},
     {"name" : "Viewer",              "page" : controls,  "icon" : "file-spreadsheet-fill"},
@@ -35,12 +36,19 @@ def render_disc (
     """
     st.title(title)
 
-    selected_page = option_menu(
+    menu = option_menu(
+        
         None, 
-        [p['name'] for p in discretionary_subpages], 
-        icons=[p['icon'] for p in discretionary_subpages], 
+        [subpage['name'] for subpage in discretionary_subpages], 
+        icons=[subpage['icon'] for subpage in discretionary_subpages], 
+        orientation="horizontal",
         default_index=0,
-        orientation="horizontal"
+    
     )
+
+    for subpage in discretionary_subpages :
+        
+        if menu == subpage['name'] and not subpage['page'] is None :
+            subpage['page']()
 
     return None

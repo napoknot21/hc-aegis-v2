@@ -47,14 +47,14 @@ def app (
 
         st.set_page_config(title, layout="wide", initial_sidebar_state=sidebar_state)
 
-        name = (st.user.name.split())[0] if st.user.name else "User"
-        st.write(f"### Welcome back, {name} !")
-
         logo = Path(__file__).parent / "assets" / "logos" / "heroics_aegis_logo.png"
         st.image(str(logo), width=300)
+
+        name = (st.user.name.split())[0] if st.user.name else "User"
+        st.write(f"### Welcome back, {name} !")
         
         
-        selected = sidebar(PAGES, f"{name}", logo_header_path=str(logo), styles=risk_menu)
+        selected = sidebar(PAGES, "Heroics Capital", logo_header_path=str(logo), styles=risk_menu)
         
         for name, _icon, render in PAGES :
 

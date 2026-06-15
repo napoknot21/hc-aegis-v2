@@ -40,10 +40,14 @@ AEGIS_LOGGER_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 # ----------------- AEGIS UI - Controls ------------------
 
+
+# Disc Controls
+
 AEGIS_DISC_CONTROLS_SUB_MENUS = [
 
     {"menu" : "Leverage", "icon" : "📐"},
     {"menu" : "VaR & SIMM", "icon" : "📈"},
+    {"menu" : "Sensitivities", "icon" : "📊"},
     {"menu" : "P&L", "icon" : "📉"},
     {"menu" : "Counterparty", "icon" : "💼"},
     {"menu" : "Credit", "icon" : "💳"},
@@ -53,6 +57,24 @@ AEGIS_DISC_CONTROLS_SUB_MENUS = [
     {"menu" : "Risks Graphs and Stats", "icon" : "📊"}
 
 ]
+
+
+
+# ------------------ Aegis Funds -------------------------
+
+
+AEGIS_DISC_FUND_HV = os.getenv("AEGIS_DISC_FUND_HV")
+AEGIS_DISC_FUND_WR = os.getenv("AEGIS_DISC_FUND_WR")
+
+
+
+AEGIS_DISC_FUNDS = {
+
+    AEGIS_DISC_FUND_HV : "HV",
+    AEGIS_DISC_FUND_WR : "WR"
+
+}
+
 
 
 

@@ -9,7 +9,7 @@ import datetime as dt
 
 from typing import Dict, List, Optional, Any, Tuple, Union
 
-from src.utils.formater import date_to_str, convert_bytes_64
+from utils.formatter import date_to_str, convert_bytes_64
 from src.config.parameters import (
 
     AEGIS_MSAL_CLIENT_SECRET_VALUE, AEGIS_MSAL_SCOPES, AEGIS_MSAL_CLIENT_ID, AEGIS_MSAL_TENANT_ID,
