@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import polars as pl
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -66,14 +68,35 @@ AEGIS_DISC_CONTROLS_SUB_MENUS = [
 AEGIS_DISC_FUND_HV = os.getenv("AEGIS_DISC_FUND_HV")
 AEGIS_DISC_FUND_WR = os.getenv("AEGIS_DISC_FUND_WR")
 
-
-
 AEGIS_DISC_FUNDS = {
 
     AEGIS_DISC_FUND_HV : "HV",
     AEGIS_DISC_FUND_WR : "WR"
 
 }
+
+
+# ------------ AEGIS Leverages ------------
+
+AEGIS_LEVERAGES_ALL_SCHEMA_OVERRIDES = {
+
+    "Gross Leverage" : pl.Float64,
+    "Commitment Leverage" : pl.Float64,
+    "Date" : pl.Datetime,
+    #"File" : pl.Utf8
+
+}
+
+
+AEGIS_LEVERAGES_ALL_COLUMNS_SCHEMA_OVERRIDES = {
+
+    "Gross Leverage" : pl.Float64,
+    "Commitment Leverage" : pl.Float64,
+    "Date" : pl.Datetime,
+    "File" : pl.Utf8
+
+}
+
 
 
 

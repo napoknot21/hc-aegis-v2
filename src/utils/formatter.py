@@ -87,7 +87,7 @@ def str_to_datetime (date : Optional[str | dt.date | dt.datetime] = None, format
         date_obj = date
 
     elif isinstance(date, dt.date):
-        date_obj = dt.datetime.combine(date, dt.time.min)
+        date_obj = dt.datetime.combine(date, dt.time.max)
     
     elif isinstance(date, str) :
 

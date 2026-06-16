@@ -10,16 +10,17 @@ import streamlit as st
 
 from typing import Optional, Dict, Any, Tuple, List
 
-from src.ui.styles.controls import subsections_controls_style
+from src.core.leverages import get_historical_leverage, get_leverage_changes_from_date
 from src.utils.formatter import str_to_date
-
+from src.ui.styles.controls import subsections_controls_style
+from src.config.parameters import AEGIS_DISC_FUND_HV
 
 def controls (
         
         title : str = "📊 CSSF Controls – Metrics and Data",
 
         date : Optional[str | dt.date | dt.datetime] = None,
-        fund : Optional[str] = "HV",
+        fund : Optional[str] = None,
 
         user : Optional[str] = None, # This should content information about the user to get or not, different rights / views, etc
     
@@ -47,6 +48,9 @@ def controls (
 
     titles = [f"{icon} {t}" for icon, t, _ in sections]
     tab_objs = st.tabs(titles)
+
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
 
     breaches = []
     for (icon, section, render_fn), tab in zip(sections, tab_objs) :
@@ -103,10 +107,20 @@ def L01_fund_level_section (
     
     """
     date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
 
     st.markdown(f'{style}<div class="section-title">{icon} {section} - {title} ({risk})</div>', unsafe_allow_html=True)
+    
+    dataframe, md5 = get_historical_leverage(date, fund)
+    breaches = []
 
-    breaches = [(risk, f"{section}", dt.datetime.now()), (risk, f"{section}", dt.datetime.now())]
+    col1, col2 = st.columns([2, 3])
+
+    with col1 :
+        st.dataframe(dataframe)
+
+    with col2 :
+        get_leverage_changes_from_date(dataframe, md5, date, fund)
 
     return breaches
 
