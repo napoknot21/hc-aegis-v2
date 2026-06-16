@@ -144,19 +144,160 @@ def get_leverage_changes_from_date (
     
     columns_values : List[str] = [column for column in dataframe.columns if column != date_column]
 
-    {
-        "Current" : pl.Float64,
-        "1D Change (%)" : pl.Float64,
-        "1W Change (%)" : pl.Float64,
-        "1M Change (%)" : pl.Float64,
-        "QTD Change (%)" : pl.Float64,
-        "YTD Change (%)" : pl.Float64,
+    if columns_values is None or len(columns_values) == 0 :
+        
+        log("No Leverage metrics availables. Retry or update your files")
+        return None
+    
+    dataframe = (dataframe.drop_nulls(subset=[date_column])
+        .with_columns(pl.col(date_column).cast(pl.Datetime("ms")))
+        .filter(pl.col(date_column) <= date)
+        .sort(date_column)
+    )
+
+    if dataframe.is_empty() :
+
+        log("No historical leverage data available before or at the requested date.")
+        return None
+
+    current_row = dataframe.tail(1)
+    dates_to_check = _build_reference_dates_dataframe(date)
+
+    matched = dates_to_check.join_asof(
+    
+        dataframe,
+        left_on="Check Date",
+        right_on=date_column,
+        strategy="backward",
+    
+    )
+
+    if matched.is_empty() :
+
+        log("No matching historical leverage data found for reference dates.")
+        return None
+
+    df = _build_leverage_changes_output(current_row=current_row, matched=matched, columns_values=columns_values)
+    
+    return df
+
+
+def _build_reference_dates_dataframe (
+        
+        date : Optional[str | dt.date | dt.datetime] = None
+
+    ) -> Optional[pl.DataFrame] :
+    """
+    Build reference dates used to compute leverage changes.
+    """
+
+    reference_dates = {
+    
+        "1D Change (%)": get_previous_bussiness_day(date),
+        "1W Change (%)": get_1w_bussiness_day(date),
+        "1M Change (%)": get_1m_bussiness_day(date),
+        "QTD Change (%)": get_qtd_bussiness_day(date),
+        "YTD Change (%)": get_ytd_bussiness_day(date),
+    
     }
 
+    rows = [
+        {
+            "Label": label,
+            "Check Date": _date_to_datetime_ms(check_date),
+            "Display Order": index,
+        }
+        for index, (label, check_date) in enumerate(reference_dates.items())
+    ]
 
-    print(columns_values)
+    reference_df = (
+
+        pl.DataFrame(rows)
+        .with_columns(
+            pl.col("Check Date").cast(pl.Datetime("ms"))
+        )
+        .sort("Check Date")
+    )
+
+    return reference_df 
+
+
+def _date_to_datetime_ms(value: dt.date | dt.datetime) -> dt.datetime:
+    """
+    Normalize a Python date/datetime to a datetime.
+
+    Polars needs homogeneous values when building a Datetime column.
+    """
+    if isinstance(value, dt.datetime):
+        return value.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    return dt.datetime.combine(value, dt.time.min)
+
+
+def _build_leverage_changes_output (
+        
+        current_row : Optional[pl.DataFrame] = None,
+        matched : Optional[pl.DataFrame] = None,
+        columns_values : Optional[List[str]] = None,
     
-    return None
+    ) -> Optional[pl.DataFrame] :
+    """
+    Build final transposed output:
+
+    Metric | Current Value | 1D Change (%) | 1W Change (%) | ...
+    """
+    matched_rows = {
+
+        row["Label"]: row
+        for row in matched.to_dicts()
+    
+    }
+
+    rows = []
+
+    for metric in columns_values :
+    
+        current_value = current_row[metric][0]
+
+        row = {
+
+            "Metric": metric,
+            "Current Value": current_value,
+        
+        }
+
+        for label, matched_row in matched_rows.items() :
+        
+            historical_value = matched_row.get(metric)
+            row[label] = _compute_change_pct(current_value, historical_value)
+
+        rows.append(row)
+
+    return pl.DataFrame(rows)
+
+
+def _compute_change_pct (
+        
+        current_value : Optional[float | int] = None,
+        historical_value : Optional[float | int]  = None,
+
+    ) -> Optional[float] :
+    """
+    Compute percentage change between current and historical value.
+    """
+    if current_value is None :
+        return None
+
+    if historical_value is None or historical_value == 0 :
+        return None
+
+    change_pct = ((current_value - historical_value) / historical_value) * 100 
+    
+    return change_pct 
 
 
 
+def get_last_row_before (ref_date : Optional[str | dt.date | dt.datetime] = None) :
+    """
+    
+    """

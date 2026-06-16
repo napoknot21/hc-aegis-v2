@@ -6,6 +6,7 @@ import polars as pl
 import pandas as pd
 import datetime as dt
 
+
 import streamlit as st
 
 from typing import Optional, Dict, Any, Tuple, List
@@ -42,7 +43,7 @@ def controls (
         ("💳",  "Credit",               credit_section),
         ("⚙️",  "Operational",          operational_section),
         ("🌱",  "ESG",                  esg_section),
-        #("✔️",  "Breach Validation",    breach_validation_section)
+        ("✔️",  "Breach Validation",    breach_validation_section)
 
     ]
 
@@ -120,7 +121,9 @@ def L01_fund_level_section (
         st.dataframe(dataframe)
 
     with col2 :
-        get_leverage_changes_from_date(dataframe, md5, date, fund)
+        
+        df = get_leverage_changes_from_date(dataframe, md5, date, fund)
+        st.dataframe(df)
 
     return breaches
 
@@ -678,10 +681,23 @@ def esg_section (
 
 # --------------- Breach Validation Section -------------
 
-def breach_validation_section () :
+def breach_validation_section (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        fund : Optional[str] = None,
+
+        section : str = "Credit Risk",
+        icon : str = "📊",
+
+        path_by_fund : Optional[Dict[str]] = None,
+
+        style : str = subsections_controls_style,
+
+    ) :
     """
     
     """
+    
     return None
 
 
