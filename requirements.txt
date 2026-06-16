@@ -1,9 +1,14 @@
 python-dotenv
 
 polars
+openpyxl
+xlwings
+fastexcel
+
 pandas
 
 sqlalchemy
+httpx
 
 streamlit
 streamlit[auth]
