@@ -6,15 +6,17 @@ import polars as pl
 import pandas as pd
 import datetime as dt
 
-
 import streamlit as st
 
 from typing import Optional, Dict, Any, Tuple, List
 
 from src.core.leverages import get_historical_leverage, get_leverage_changes_from_date
 from src.utils.formatter import str_to_date
-from src.ui.styles.controls import subsections_controls_style
 from src.config.parameters import AEGIS_DISC_FUND_HV
+
+from src.ui.components.chart import leverage_line_chart
+from src.ui.styles.controls import subsections_controls_style
+
 
 def controls (
         
@@ -118,7 +120,12 @@ def L01_fund_level_section (
     col1, col2 = st.columns([2, 3])
 
     with col1 :
-        st.dataframe(dataframe)
+        
+        title = f"Leverage over time until {date}"
+        fig = leverage_line_chart(dataframe, md5, title, date, ["Gross Leverage", "Commitment Leverage"], "Date")
+
+        st.plotly_chart(fig)
+
 
     with col2 :
         

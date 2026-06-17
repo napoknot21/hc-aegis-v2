@@ -14,3 +14,4 @@ streamlit
 streamlit[auth]
 streamlit_option_menu
 streamlit-aggrid
+plotly
