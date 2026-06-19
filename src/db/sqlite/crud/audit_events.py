@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Optional
 
-from src.db.sqlite.crud.common import encode_json, execute, fetch_all, fetch_one, insert_and_get_id
+from db.sqlite.crud.common import encode_json, execute, fetch_all, fetch_one, insert_and_get_id
 
 
 def create_audit_event(
