@@ -3,8 +3,9 @@ from __future__ import annotations
 import streamlit as st
 import datetime as dt
 
-
 from typing import Optional, Dict, List
+
+from src.ui.components.text import margin_line
 
 
 def booker (
@@ -18,7 +19,7 @@ def booker (
     """
     
     """
-    st.write('')
+    margin_line()
     st.title(title)
     
     

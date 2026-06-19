@@ -133,3 +133,18 @@ def right (text : str, tag : str, extra_css : str = "") :
         unsafe_allow_html=True   
 
     )
+
+
+# -------------- Espace --------------
+
+
+def margin_line (lines : int = 1) -> None :
+    """
+    
+    """
+
+    for i in range(lines) :
+        st.write("")
+
+    return None
+    

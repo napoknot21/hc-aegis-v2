@@ -7,10 +7,11 @@ from streamlit_option_menu import option_menu
 
 from typing import Optional, Dict
 
-from src.ui.pages.disc.booker import booker
-from src.ui.pages.disc.controls import controls
-from src.ui.pages.disc.updater import updater
+from src.ui.components.text import margin_line
 
+from src.ui.pages.disc.Booker.booker import booker
+from src.ui.pages.disc.Controls.controls import controls
+from src.ui.pages.disc.Updater.updater import updater
 
 discretionary_subpages = [
 
@@ -28,13 +29,15 @@ def render_disc (
 
         title : Optional[str] = "",
         subtitle : Optional[str] = None,
-        fundation_map : Optional[Dict] = None
+        fundation_map : Optional[Dict] = None,
+        date : Optional[str | dt.date | dt.datetime] = None,
+        fund : Optional[str] = None
 
     ) :
     """
     
     """
-    st.title(title)
+    margin_line(2)
 
     menu = option_menu(
         
@@ -49,6 +52,6 @@ def render_disc (
     for subpage in discretionary_subpages :
         
         if menu == subpage['name'] and not subpage['page'] is None :
-            subpage['page']()
+            subpage['page'](date=date, fund=fund)
 
     return None

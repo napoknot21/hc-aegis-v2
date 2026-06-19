@@ -33,6 +33,7 @@ PAGES = [
 ]
 
 
+
 def app (
         
         title : Optional[str] = "Heroics Aegis",
@@ -61,13 +62,13 @@ def app (
         st.write(f"### Welcome back, {name} !")
         
         
-        selected = sidebar(PAGES, "Heroics Capital", logo_header_path=str(logo), styles=risk_menu)
+        selected, selected_date, selected_fund = sidebar("Heroics Capital", PAGES, logo_header_path=str(logo), styles=risk_menu)
         
         for name, _icon, render in PAGES :
 
             if selected == name :
 
-                render()
+                render(date=selected_date, fund=selected_fund)
                 break
 
     return None

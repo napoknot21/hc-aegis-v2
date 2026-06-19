@@ -1,11 +1,16 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import List, Dict, Optional
+import datetime as dt
 
-import streamlit as st 
+import streamlit as st
 from streamlit_option_menu import option_menu
+
+from pathlib import Path
+from typing import List, Dict, Optional, Tuple
+
+from src.config.parameters import AEGIS_DISC_FUNDS
 from src.ui.components.text import center_h2
+from src.ui.components.selector import date_selector
 
 
 def header (
@@ -58,18 +63,21 @@ def header (
 
 def sidebar (
         
-        groupes : List[Dict[str, str]],
         title : str = "",
+        groupes : Optional[List[Dict[str, str]]] = None,
+        funds : Optional[Dict] = None,
+
         logo_header_path : Optional[str] = None,
         styles : Optional[Dict] = None
     
-    ) :
+    ) -> Tuple[str, dt.date, str] :
     """
     From a group of tabs, it will create a graphical sidebar
     """
     names = [p[0] for p in groupes]
     icons = [p[1] for p in groupes]
 
+    funds = AEGIS_DISC_FUNDS if funds is None else funds
     sidebar = st.sidebar
 
     with sidebar:
@@ -79,15 +87,17 @@ def sidebar (
 
         center_h2(title)
         
-        selected = option_menu(
-            None,
-            names,
-            icons=icons,
-            styles=styles
-        )
+        selected = option_menu(None, names, icons=icons, styles=styles)
         st.cache_data.clear()
 
-        footer_aegis("http://localhost:9999")
+        st.divider()
+
+        selected_date = date_selector("Date", key="aegis_global_date")
+        selected_fund = st.selectbox("Fund", list(funds.keys()), key="aegis_sidebar_fund")
+
+        st.divider()
+
+        footer_aegis("https://sentinelle.heroics-capital.com")
 
         if st.user.is_logged_in :
             
@@ -97,7 +107,10 @@ def sidebar (
     # update query params for deep linking
     st.query_params["page"] = selected
     
-    return selected
+    return selected, selected_date, selected_fund
+
+
+
 
 
 def footer_aegis (link : Optional[str] = None) :
@@ -106,7 +119,7 @@ def footer_aegis (link : Optional[str] = None) :
     """
     if link :
 
-        aegis = st.link_button("Access Heroics Aegis", link)
+        aegis = st.link_button("Heroics Sentinelle", link)
 
     return aegis
 

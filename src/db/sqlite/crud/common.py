@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any, Iterable, Optional
 
-from src.db.connection import get_connection, row_to_dict, rows_to_dicts
+from db.sqlite.connection import get_connection, row_to_dict, rows_to_dicts
 
 
 def encode_json(value: Any) -> Optional[str]:

@@ -4,6 +4,7 @@ import os
 import polars as pl
 
 from dotenv import load_dotenv
+from typing import Any, Optional
 
 load_dotenv()
 
@@ -99,5 +100,236 @@ AEGIS_LEVERAGES_ALL_COLUMNS_SCHEMA_OVERRIDES = {
 
 
 
+# ---------------------- AEGIS Risks ---------------------- 
+
+# L01 (Leverage Risk)
+
+AEGIS_L01_RISK_LEVELS = [
+
+    {
+        "label" : "Normal",
+        "from" : None,
+        "to" : 275,
+    },
+
+    {
+        "label" : "Alert",
+        "from": 275,
+        "to": 290,
+
+    },
+
+    {
+        "label" : "Pre-Breach",
+        "from": 290,
+        "to": 300,
+
+    },
+
+    {
+        "label" : "Breach",
+        "from": 300,
+        "to": None,
+
+    },
+
+]
+
+AEGIS_L01_RISK_BACKGROUND_LEVELS = [
+
+    {
+        "label" : "Normal",
+        "color": None,
+        "opacity": None,
+    },
+    
+    {
+        "label" : "Alert",
+        "color": "#2ca02c",
+        "opacity": 0.14,
+    },
+    
+    {
+        "label" : "Pre-Breach",
+        "color": "#f2c94c",
+        "opacity": 0.18,
+    },
+
+    {
+        "label" : "Breach",
+        "color": "#8a0303",
+        "opacity": 0.16,
+    },
+
+]
+
+AEGIS_L01_RISK = {
+
+    "levels" : AEGIS_L01_RISK_LEVELS,
+    "background" : AEGIS_L01_RISK_BACKGROUND_LEVELS
+
+}
 
 
+# L02 (Leverage Risk)
+
+AEGIS_L02_RISK_LEVELS = [
+
+    {
+        "label" : "Normal",
+        "from" : -25,
+        "to" : 25
+    },
+
+    {
+        "label" : "Alert",
+        "from": -30,
+        "to": -25,
+
+    },
+
+    {
+        "label" : "Alert",
+        "from": 25,
+        "to": 30,
+    },
+
+    {
+        "label" : "Breach",
+        "from" : None,
+        "to" : -30
+    },
+
+    {
+        "label" : "Breach",
+        "from" : 30,
+        "to" : None,
+    },
+
+
+]
+
+AEGIS_L02_RISK_BACKGROUND_LEVELS = [
+
+    {
+        "label" : "Normal",
+        "color": "#f2c94c",
+        "opacity": 0.18,
+    },
+
+    {
+        "label" : "Alert",
+        "color": "#f2c94c",
+        "opacity": 0.18,
+    },
+
+    {
+        "label" : "Breach",
+        "color": "#8a0303",
+        "opacity": 0.16,
+    }
+
+]
+
+AEGIS_L02_RISK = {
+
+    "levels" : AEGIS_L02_RISK_LEVELS,
+    "background" : AEGIS_L02_RISK_BACKGROUND_LEVELS
+
+}
+
+
+# L03 (Leverage Risk)
+
+AEGIS_L03_RISK_LEVELS = [
+
+    {
+        "label" : "Normal",
+        "from" : -25,
+        "to" : 25
+    },
+
+    {
+        "label" : "Alert",
+        "from": -30,
+        "to": -25,
+
+    },
+
+    {
+        "label" : "Alert",
+        "from": 25,
+        "to": 30,
+    },
+
+    {
+        "label" : "Breach",
+        "from" : None,
+        "to" : -30
+    },
+
+    {
+        "label" : "Breach",
+        "from" : 30,
+        "to" : None,
+    },
+
+
+]
+
+AEGIS_L03_RISK_BACKGROUND_LEVELS = [
+
+    {
+        "label" : "Normal",
+        "color": "#f2c94c",
+        "opacity": 0.18,
+    },
+
+    {
+        "label" : "Alert",
+        "color": "#f2c94c",
+        "opacity": 0.18,
+    },
+
+    {
+        "label" : "Breach",
+        "color": "#8a0303",
+        "opacity": 0.16,
+    }
+
+
+]
+
+AEGIS_L03_RISK = {
+
+    "levels" : AEGIS_L03_RISK_LEVELS,
+    "background" : AEGIS_L03_RISK_BACKGROUND_LEVELS
+
+}
+
+
+AEGIS_RISKS = {
+
+    "L01"  : AEGIS_L01_RISK,
+    "L02"  : AEGIS_L02_RISK,
+    "L03"  : AEGIS_L03_RISK,
+    
+    "S01"  : None,
+    "S02"  : None,
+    "S03"  : None,
+
+    "D01"  : None,
+    "GEQ"  : None,
+    "GFX"  : None,
+    "DS01" : None,
+    "DGFX" : None,
+    "V01"  : None,
+
+    "PL01" : None,
+    "PL02" : None,
+
+    "LR01" : None,
+    "CR01" : None,
+    "CR03" : None,
+
+}

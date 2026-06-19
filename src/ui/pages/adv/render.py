@@ -12,7 +12,9 @@ def render_adv (
 
         title : Optional[str] = "Advisory",
         subtitle : Optional[str] = None,
-        fundation_map : Optional[Dict] = None
+        fundation_map : Optional[Dict] = None,
+        date : Optional[str] = None,
+        fund : Optional[str] = None
 
     ) :
     """

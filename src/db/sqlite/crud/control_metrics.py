@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Optional
 
-from src.db.crud.common import build_update, encode_json, execute, fetch_all, fetch_one, insert_and_get_id
+from src.db.sqlite.crud.common import build_update, encode_json, execute, fetch_all, fetch_one, insert_and_get_id
 
 
 def create_control_metric(
