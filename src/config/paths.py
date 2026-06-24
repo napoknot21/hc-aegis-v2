@@ -10,7 +10,9 @@ load_dotenv()
 LIBAPI_ABS_PATH = os.getenv("LIBAPI_ABS_PATH")
 
 
-# ------------ AEGIS PATHS ----------------
+# ------------ AEGIS Sqlite Database ----------------
+
+AEGIS_DATABASE_ABS_PATH = os.getenv("AEGIS_DATABASE_ABS_PATH")
 
 
 # ------------ AEGIS Leverages ------------

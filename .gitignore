@@ -14,3 +14,4 @@ data
 .json
 sandbox/streamlit_oidc_test/.streamlit/secrets.toml
 .streamlit/secrets.toml
+AEGIS_DATABASE.db
