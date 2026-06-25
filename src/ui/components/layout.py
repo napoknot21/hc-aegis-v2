@@ -11,7 +11,7 @@ from typing import List, Dict, Optional, Tuple
 from src.config.parameters import AEGIS_DISC_FUNDS
 from src.ui.components.text import center_h2
 from src.ui.components.selector import date_selector
-
+from src.ui.pages.login.logout import logout
 
 def header (
         
@@ -99,10 +99,8 @@ def sidebar (
 
         footer_aegis("https://sentinelle.heroics-capital.com")
 
-        if st.user.is_logged_in :
-            
-            if st.button("Logout"):
-                st.logout()
+        #if st.user.is_logged_in :
+        logout()
 
     # update query params for deep linking
     st.query_params["page"] = selected

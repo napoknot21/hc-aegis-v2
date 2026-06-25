@@ -45,10 +45,10 @@ def app (
     """
     init_database(seed=True)
 
-    if not st.user.is_logged_in :
+    #if not st.user.is_logged_in :
 
-        login_page()
-        return None
+    #    login_page()
+    #    return None
     
 
     st.set_page_config(title, layout="wide", initial_sidebar_state=sidebar_state)
@@ -56,9 +56,10 @@ def app (
     logo = Path(__file__).parent / "assets" / "logos" / "heroics_aegis_logo.png"
     st.image(str(logo), width=300)
 
-    name = (st.user.name.split())[0] if st.user.name else "User"
-    st.write(f"### Welcome back, {name} !")
+    user_name = getattr(st.user, "name", None)
+    name = user_name.split()[0] if user_name else "User"
     
+    st.write(f"### Welcome back, {name} !")
     
     selected, selected_date, selected_fund = sidebar("Heroics Capital", PAGES, logo_header_path=str(logo), styles=risk_menu)
     

@@ -15,11 +15,10 @@ def login_page () -> None :
     """
     
     """
-
-    login_header()
-    
     _, center, _ = st.columns([1, 2, 1])
     with center :
+        
+        login_header()
         login_button()
     
     quote_section()
@@ -34,7 +33,7 @@ def login_header (logo : Optional[str | Path] = None) -> None :
     """
     margin_line(2)
     
-    _, center, _ = st.columns([1, 2, 1])
+    _, center, _ = st.columns([1, 1, 1])
 
     with center :
 
@@ -53,8 +52,7 @@ def login_button () -> None :
     """
     margin_line(2)
 
-    _, center, _ = st.columns([1, 2, 1])
-    
+    _, center, _ = st.columns([1, 1, 1])
     with center :
 
         if st.button("Login with Microsoft"):

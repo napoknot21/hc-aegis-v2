@@ -18,9 +18,13 @@ from src.ui.components.text import margin_line
 from src.ui.styles.controls import subsections_controls_style
 
 from src.ui.pages.disc.Controls.leverages import leverages
-from src.ui.pages.disc.Controls.sensitivies import sensitivities
 from src.ui.pages.disc.Controls.var_simm import var_simm
+from src.ui.pages.disc.Controls.sensitivies import sensitivities
 from src.ui.pages.disc.Controls.pnl import pnl
+from src.ui.pages.disc.Controls.counterparty import counterparty
+from src.ui.pages.disc.Controls.credit import credit
+from src.ui.pages.disc.Controls.operational import operational
+from src.ui.pages.disc.Controls.breaches import breaches_validator
 
 
 def controls (
@@ -68,10 +72,10 @@ def controls (
         
         with tab :
 
-            breach = render_fn(date, fund, section, icon, user, risks) or []
+            breach = render_fn(date, fund, section, icon, user=user, risks=risks, breaches=breaches) or []
             breaches += breach
 
-    st.write(breaches)
+
     return None
 
 
@@ -89,7 +93,11 @@ def leverages_section (
         sub_menus : Optional[Dict[str]] = None,
 
         user : Optional[Any] = None, # Check the User rights
-        risks : Optional[Dict] = None
+        risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
+        style : str = subsections_controls_style,
+
 
     ) -> None :
     """
@@ -110,15 +118,20 @@ def var_simm_section (
         section : str = "VaR/SIMM",
         icon : str = "📈",
 
-        path_by_fund : Optional[Dict[str]] = None,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
+        user : Optional[Any] = None, # Check the User rights
+        risks : Optional[Dict] = None,
 
+        breaches : Optional[List[Tuple]] = None,
         style : str = subsections_controls_style,
+
     ) :
     """
     
     """
-    var_simm_breaches = var_simm(date, fund, section, icon, path_by_fund, style)
+    var_simm_breaches = var_simm(date, fund, section, icon, path_by_fund)
 
     return var_simm_breaches
 
@@ -133,11 +146,14 @@ def sensitivities_section (
         section : str = "Sensitivities",
         icon : str = "📊",
 
-        path_by_fund : Optional[Dict[str]] = None,
-        style : str = subsections_controls_style,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
-        user : Optional[Any] = None,
+        user : Optional[Any] = None, # Check the User rights
         risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
+        style : str = subsections_controls_style,
 
     ) -> None :
     """
@@ -158,11 +174,14 @@ def pnl_section (
         section : str = "Sensitivities",
         icon : str = "📊",
 
-        path_by_fund : Optional[Dict[str]] = None,
-        style : str = subsections_controls_style,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
-        user : Optional[Any] = None,
-        risks : Optional[Dict] = None
+        user : Optional[Any] = None, # Check the User rights
+        risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
+        style : str = subsections_controls_style,
 
     ) -> Optional[List[Tuple]] :
     """
@@ -183,8 +202,13 @@ def counterparty_section (
         section : str = "Counterparty",
         icon : str = "📊",
 
-        path_by_fund : Optional[Dict[str]] = None,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
+        user : Optional[Any] = None, # Check the User rights
+        risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
         style : str = subsections_controls_style,
 
     ) -> Optional[List[Tuple]] :
@@ -228,43 +252,22 @@ def credit_section (
         section : str = "Credit Risk",
         icon : str = "📊",
 
-        path_by_fund : Optional[Dict[str]] = None,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
+        user : Optional[Any] = None, # Check the User rights
+        risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
         style : str = subsections_controls_style,
     
     ) -> Optional[List[Tuple]] :
     """
     
     """
-    cr01_breaches = CR01_concentration_risk_section(date, fund, section, icon, style=style) or []
+    cr01_breaches = credit(date, fund, section, icon, style=style) or []
 
     return cr01_breaches
-
-
-def CR01_concentration_risk_section (
-        
-        date : Optional[str | dt.date | dt.datetime] = None,
-        fund : Optional[str] = "HV",
-
-        section : str = "Credit Risk",
-        icon : str = "📊",
-
-        title : str = "Concentration Risk",
-        risk : str = "LR01",
-
-        path_by_fund : Optional[Dict[str]] = None,
-
-
-        style : str = subsections_controls_style,
-
-    ) -> Optional[List[Tuple]] :
-    """
-    
-    """
-    st.markdown(f'{style}<div class="section-title">{icon} {section} - {title} ({risk})</div>', unsafe_allow_html=True)
-    return None
-
-
 
 
 # --------------- Operational Section ---------------
@@ -277,16 +280,22 @@ def operational_section (
         section : str = "Credit Risk",
         icon : str = "📊",
 
-        path_by_fund : Optional[Dict[str]] = None,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
+        user : Optional[Any] = None, # Check the User rights
+        risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
         style : str = subsections_controls_style,
 
     ) :
     """
     
     """
-    st.warning("Data missing")
-    return None
+    operational_breaches = operational(date, fund, section, icon)
+
+    return operational_breaches
 
 
 # --------------- ESG Section ---------------
@@ -299,8 +308,13 @@ def esg_section (
         section : str = "Credit Risk",
         icon : str = "📊",
 
-        path_by_fund : Optional[Dict[str]] = None,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
+        user : Optional[Any] = None, # Check the User rights
+        risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
         style : str = subsections_controls_style,
 
     ) :
@@ -321,19 +335,24 @@ def breach_validation_section (
         section : str = "Credit Risk",
         icon : str = "📊",
 
-        path_by_fund : Optional[Dict[str]] = None,
+        path_by_fund : Optional[Dict[str]] = None,    
+        sub_menus : Optional[Dict[str]] = None,
 
+        user : Optional[Any] = None, # Check the User rights
+        risks : Optional[Dict] = None,
+
+        breaches : Optional[List[Tuple]] = None,
         style : str = subsections_controls_style,
 
     ) :
     """
     
     """
-    
+    breaches_validator(date, fund, breaches=breaches)
     return None
 
 
-
+# ---------------  Section -------------
 
 def risks_graphs_and_stats_section () :
     """

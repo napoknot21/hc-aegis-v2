@@ -1,12 +1,12 @@
-CREATE TABLE IF NOT EXISTS quotes (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    
-    category TEXT NOT NULL,
-    author TEXT NOT NULL,
-    quote TEXT NOT NULL,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    
-    UNIQUE(category, author, quote)
-
-);
+-- CREATE TABLE IF NOT EXISTS quotes (
+-- 
+--     id INTEGER PRIMARY KEY AUTOINCREMENT,
+--     
+--     category TEXT NOT NULL,
+--     author TEXT NOT NULL,
+--     quote TEXT NOT NULL,
+--     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+--     
+--     UNIQUE(category, author, quote)
+-- 
+-- );
