@@ -9,7 +9,7 @@ from typing import Any, Optional
 load_dotenv()
 
 
-# ----------------- MSAL (AEGIS Controls) ------------------
+# ---------------------- MSAL (AEGIS Controls) ----------------------
 
 AEGIS_MSAL_CLIENT_SECRET_VALUE = os.getenv("AEGIS_MSAL_CLIENT_SECRET_VALUE")
 AEGIS_MSAL_CLIENT_SECRET_ID = os.getenv("AEGIS_MSAL_CLIENT_SECRET_ID")
@@ -31,7 +31,7 @@ AEGIS_MSAL_EMAIL_BREACH_COMM_SUBJECT = os.getenv("AEGIS_MSAL_EMAIL_BREACH_COMM_S
 AEGIS_MSAL_EMAIL_BREACH_COMM_CONTENT = os.getenv("AEGIS_MSAL_EMAIL_BREACH_COMM_CONTENT")
 
 
-# ----------------- LOGGER (AEGIS Modules) ------------------
+# ---------------------- LOGGER (AEGIS Modules) ----------------------
 
 AEGIS_LOGGER_NAME = "aegis"
 AEGIS_LOGGER_LOGS_DIR_NAME = "logs"
@@ -41,7 +41,7 @@ AEGIS_LOGGER_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 
-# ----------------- AEGIS UI - Controls ------------------
+# ---------------------- AEGIS UI - Controls ----------------------
 
 
 # Disc Controls
@@ -63,7 +63,7 @@ AEGIS_DISC_CONTROLS_SUB_MENUS = [
 
 
 
-# ------------------ Aegis Funds -------------------------
+# ---------------------- Aegis Funds ----------------------
 
 
 AEGIS_DISC_FUND_HV = os.getenv("AEGIS_DISC_FUND_HV")
@@ -77,7 +77,7 @@ AEGIS_DISC_FUNDS = {
 }
 
 
-# ------------ AEGIS Leverages ------------
+# ---------------------- AEGIS Leverages ----------------------
 
 AEGIS_LEVERAGES_ALL_SCHEMA_OVERRIDES = {
 
@@ -98,6 +98,38 @@ AEGIS_LEVERAGES_ALL_COLUMNS_SCHEMA_OVERRIDES = {
 
 }
 
+
+# ---------------------- AEGIS SIMM / VaR ----------------------
+
+AEGIS_IM_ICE_COLUMNS = {
+
+    "Counterparty" : pl.Utf8,
+    "IM" : pl.Float64,
+    "MV" : pl.Float64,
+    "MV Capped" : pl.Float64,
+    "MV Capped Type" : pl.Float64,
+    "Available / Shortfall Amount" : pl.Float64,
+    "Client Margin Rate" : pl.Float64,
+    "Date" : pl.Date
+
+}
+
+AEGIS_IM_CTPY_COLUMNS = {
+
+    "Fundation" : pl.Utf8,
+    "Account" : pl.Utf8,
+    "Date": pl.Date,
+    "Bank" : pl.Utf8,
+    "Currency" : pl.Utf8,
+    "Total" : pl.Float64,
+    "IM" : pl.Float64,
+    "VM" : pl.Float64,
+    "Requirement" : pl.Float64,
+    "Net Excess/Deficit" : pl.Float64
+
+}
+
+AEGIS_SIMM_CUTOFF_DATE = os.getenv("AEGIS_SIMM_CUTOFF_DATE")
 
 
 # ---------------------- AEGIS Risks ---------------------- 

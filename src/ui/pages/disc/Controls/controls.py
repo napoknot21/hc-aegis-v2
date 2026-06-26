@@ -215,7 +215,9 @@ def counterparty_section (
     """
     
     """
+    ctpy_breaches = counterparty(date, fund, section, icon, path_by_fund)
 
+    return ctpy_breaches
 
 
 def LR01_concentration_risk_section (

@@ -59,13 +59,56 @@ def runners_section (
     """
     breaches = [] if breaches is None else breaches
 
-    with st.spinner("Running full breach analysis...") :
-    
-        if st.button("🚨 Breach Analysis Runner", type="primary"):
-            st.write(breaches)
+    col1, _ = st.columns(2, gap=None)
+
+    with col1 :
+
+        runner, loader = st.columns(2, gap=None)
+
+        with runner :
+            breach_analysis_runner(date, fund, breaches)
+
+        with loader :
+            data_breach_loader(date, fund)
     
     return None
 
+
+def breach_analysis_runner (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        fund : Optional[str] = None,
+
+        breaches : Optional[List[Tuple]] = None,
+
+    ) -> None :
+    """
+    
+    """
+    with st.spinner("Running full breach analysis...") :
+    
+        if st.button("🚨 Breach Analysis Runner", type="primary"):
+            st.write("")
+
+    return None
+
+
+def data_breach_loader (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        fund : Optional[str] = None,
+
+    ) -> None :
+    """
+    
+    """
+    with st.spinner("Running full breach analysis...") :
+    
+        if st.button("🚨 Data Breach Loader", type="primary"):
+            st.write("")
+
+
+    return None
 
 
 def breaches_chat_section (

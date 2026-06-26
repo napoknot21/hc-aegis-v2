@@ -9,6 +9,9 @@ from typing import Optional, Dict, List, Any
 from src.config.parameters import AEGIS_DISC_FUND_HV
 from src.utils.formatter import str_to_date, date_to_str
 from src.ui.styles.controls import subsections_controls_style
+from src.ui.components.text import margin_line
+from src.core.simm import get_im_ctpy_all_history, get_im_ice_all_history, get_im_ctpy_by_date
+
 
 
 def var_simm (
@@ -36,7 +39,7 @@ def var_simm (
 def S01_simm_section (
         
         date : Optional[str | dt.date | dt.datetime] = None,
-        fund : Optional[str] = "HV",
+        fund : Optional[str] = None,
 
         section : str = "VaR/SIMM",
         icon : str = "📈",
@@ -53,7 +56,19 @@ def S01_simm_section (
     """
     st.markdown(f'{style}<div class="section-title">{icon} {section} - {title} ({risk})</div>', unsafe_allow_html=True)
 
-    
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    dataframe, md5 = get_im_ctpy_all_history(date, fund)
+    st.dataframe(dataframe)
+    margin_line()
+
+    df, md = get_im_ice_all_history(date, fund)
+    st.dataframe(df)
+
+    date_df, _ , real_date= get_im_ctpy_by_date(date, fund)
+    st.dataframe(date_df)
+    st.write(real_date)
     return None
 
 

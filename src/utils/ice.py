@@ -12,6 +12,8 @@ sys.path.append(LIBAPI_ABS_PATH)
 from libapi.ice.trade_manager import TradeManager   # type: ignore
 from libapi.ice.calculator import IceCalculator     # type: ignore
 
+from src.utils.logger import log
+
 
 def get_ice_calculator (loopback : int = 3) :
     """

@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime as dt
 import streamlit as st
 
-from typing import Optional, Dict, List, Tuple
+from typing import Optional, Dict, List, Tuple, Any
 
 from src.config.parameters import AEGIS_DISC_FUND_HV
 from src.utils.formatter import str_to_date
@@ -34,7 +34,9 @@ def counterparty (
     date = str_to_date(date)
     fund = AEGIS_DISC_FUND_HV if fund is None else fund
 
-    return None
+    ctpy_breaches = CR01_concentration_risk(date, fund) or []
+
+    return ctpy_breaches
 
 
 
