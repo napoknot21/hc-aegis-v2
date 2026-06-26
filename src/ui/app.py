@@ -45,10 +45,10 @@ def app (
     """
     init_database(seed=True)
 
-    #if not st.user.is_logged_in :
+    if getattr(st.user, "is_logged_in", None) is None :
 
-    #    login_page()
-    #    return None
+        login_page()
+        return None
     
 
     st.set_page_config(title, layout="wide", initial_sidebar_state=sidebar_state)

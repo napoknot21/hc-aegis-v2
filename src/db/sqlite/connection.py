@@ -145,24 +145,13 @@ def init_database (
     Initialize the SQLite database.
 
     Behavior:
-    - If the database file does not exist:
-        - create the database file
-        - run migrations
-        - run seeds if seed=True
-
-    - If the database file already exists:
-        - do nothing by default
-
-    This avoids re-running migrations or seeds every time the app starts.
+    - create the database file if needed
+    - run idempotent migrations
+    - run idempotent seeds if seed=True
     """
     db_path = AEGIS_DATABASE_ABS_PATH if db_path is None else db_path
 
-    first_creation = not database_exists(db_path)
-
-    if not first_creation :
-        return
-
-    with get_connection() as conn :
+    with get_connection(db_path) as conn :
 
         run_migrations(conn)
 
