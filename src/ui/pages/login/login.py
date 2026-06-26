@@ -37,7 +37,7 @@ def login_header(logo: Optional[str | Path] = None) -> None:
     with center:
 
         logo = (Path(__file__).parent.parent.parent/ "assets" / "logos" / "heroics_aegis_logo.png" if logo is None else Path(logo))
-        st.image(str(logo), use_container_width=True)
+        st.image(str(logo), width="stretch")
 
     margin_line()
 
