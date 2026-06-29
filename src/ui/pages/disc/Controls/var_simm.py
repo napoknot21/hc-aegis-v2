@@ -6,12 +6,16 @@ import streamlit as st
 
 from typing import Optional, Dict, List, Any
 
-from src.config.parameters import AEGIS_DISC_FUND_HV
+from src.config.parameters import AEGIS_DISC_FUND_HV, RENAME_COUNTERPARTY_MAP
 from src.utils.formatter import str_to_date, date_to_str
 from src.ui.styles.controls import subsections_controls_style
 from src.ui.components.text import margin_line
-from src.core.simm import get_im_ctpy_all_history, get_im_ice_all_history, get_im_ctpy_by_date
+from src.core.simm import (
+    get_im_ctpy_all_history, get_im_ice_all_history, 
+    get_im_ctpy_values_by_date, get_im_ice_values_by_date,
+)
 
+from src.ui.components.graph import plot_im_by_bank, plot_vm_by_bank
 
 
 def var_simm (
@@ -29,9 +33,13 @@ def var_simm (
     """
     
     """
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    nav = 85231771.0
     s01_breaches = S01_simm_section(date, fund, section, icon) or []
-    s02_breaches = S02_im_section(date, fund, section, icon) or []
-    s03_breaches = S03_vm_section(date, fund, section, icon) or []
+    s02_breaches = S02_im_section(date, fund, section, icon, nav=nav) or []
+    s03_breaches = S03_vm_section(date, fund, section, icon, nav=nav) or []
 
     return s01_breaches + s02_breaches + s03_breaches
 
@@ -48,9 +56,8 @@ def S01_simm_section (
         risk : str = "S01",
 
         path_by_fund : Optional[Dict[str]] = None,
-
-
         style : str = subsections_controls_style,
+
     ) :
     """
     """
@@ -59,16 +66,8 @@ def S01_simm_section (
     date = str_to_date(date)
     fund = AEGIS_DISC_FUND_HV if fund is None else fund
 
-    dataframe, md5 = get_im_ctpy_all_history(date, fund)
-    st.dataframe(dataframe)
     margin_line()
 
-    df, md = get_im_ice_all_history(date, fund)
-    st.dataframe(df)
-
-    date_df, _ , real_date= get_im_ctpy_by_date(date, fund)
-    st.dataframe(date_df)
-    st.write(real_date)
     return None
 
 
@@ -84,15 +83,95 @@ def S02_im_section (
         risk : str = "S02",
 
         path_by_fund : Optional[Dict[str]] = None,
-
-
         style : str = subsections_controls_style,
+
+        nav : float = 1.0
     ) :
     """
     """
     st.markdown(f'{style}<div class="section-title">{icon} {section} - {title} ({risk})</div>', unsafe_allow_html=True)
 
+    date = date_to_str(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    col1, col2 = st.columns(2)
+
+    with col1 :
+        
+        margin_line()
+        im_ctpy_section(date, fund, nav=nav)
+
+    with col2 :
+
+        margin_line()
+        im_ice_seciton(date, fund, nav=nav)
+
+    return None
+
+
+def im_ctpy_section (
+        
+        date : Optional[str | dt.date | dt.datetime] = None,
+        fund : Optional[str] = None,
+
+        nav : Optional[float] = 1.0,
+        rename_map : Optional[Dict] = None,
+
+    ) :
+    """
     
+    """
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    dataframe, md5 = get_im_ctpy_all_history(date, fund)
+    #st.dataframe(dataframe)
+
+    daily_dataframe, _ , real_date= get_im_ice_values_by_date(date, fund)
+
+    
+    fig = plot_im_by_bank(dataframe, md5, nav_value=nav, title="IM Over Time by Counterparty (Data)")
+    st.plotly_chart(fig, width="content")
+
+    margin_line()
+
+    return None
+
+
+def im_ice_seciton (
+        
+        date : Optional[str | dt.date | dt.datetime] = None,
+        fund : Optional[str] = None,
+
+        nav : Optional[float] = 1.0,
+        rename_map : Optional[Dict] = None,
+
+    ) :
+    """
+    
+    """
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    rename_map = RENAME_COUNTERPARTY_MAP if rename_map is None else rename_map
+
+    dataframe, md5  = get_im_ice_all_history(date, fund)
+    #st.dataframe(dataframe)
+
+    fig = plot_im_by_bank(
+        dataframe, md5,
+        bank_col="Counterparty",
+        nav_value=nav,
+        alias_map=rename_map,
+        title="VM Over Time by Counterparty (ICE)"
+    
+    )
+
+
+    st.plotly_chart(fig, width="content")
+
+    
+
     return None
 
 
@@ -108,14 +187,76 @@ def S03_vm_section (
         risk : str = "S03",
 
         path_by_fund : Optional[Dict[str]] = None,
-
-
         style : str = subsections_controls_style,
+
+        nav : float = 1.0
     ) :
     """
     """
     st.markdown(f'{style}<div class="section-title">{icon} {section} - {title} ({risk})</div>', unsafe_allow_html=True)
 
+    col1, col2 = st.columns(2)
+
+    with col1 :
+
+        margin_line()
+        vm_ctpy_section(date, fund, nav=nav)
     
+    with col2 :
+
+        margin_line()
+        vm_ice_section(date, fund, nav=nav)
+
     return None
 
+
+def vm_ctpy_section (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        fund : Optional[str] = None,
+
+        nav : Optional[float] = 1.0,
+        rename_map : Optional[Dict] = None,
+
+    ) -> None :
+    """
+    
+    """
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    dataframe, md5  = get_im_ctpy_all_history(date, fund)
+    #st.dataframe(dataframe)
+
+    fig = plot_vm_by_bank(dataframe, md5, bank_col="Bank", value_col="VM", nav_value=nav, title="VM Over Time by Counterparty (Data)")
+    st.plotly_chart(fig, width="content")
+
+    return None
+
+
+def vm_ice_section (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        fund : Optional[str] = None,
+
+        nav : Optional[float] = 1.0,
+        rename_map : Optional[Dict] = None,
+    
+    ) -> None :
+    """
+    
+    """
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    rename_map = RENAME_COUNTERPARTY_MAP if rename_map is None else rename_map
+
+    dataframe, md5  = get_im_ice_all_history(date, fund)
+    #st.dataframe(dataframe)
+
+    nav = 85231771.0
+    fig = plot_vm_by_bank(dataframe, md5, bank_col="Counterparty", value_col="MV", nav_value=nav, alias_map=rename_map, title="VM Over Time by Counterparty (ICE)")
+    st.plotly_chart(fig, width="content")
+
+
+    return None

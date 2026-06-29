@@ -77,7 +77,7 @@ def get_im_ice_all_history (
     return dataframe, md5
 
 
-def get_im_ctpy_by_date (
+def get_im_ctpy_values_by_date (
         
         date : Optional[str | dt.datetime | dt.date] = None,
         fund : Optional[str] = None,
@@ -106,6 +106,38 @@ def get_im_ctpy_by_date (
 
     return dataframe, md5, available_date
 
+
+def get_im_ice_values_by_date (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        fund : Optional[str] = None,
+
+        dataframe : Optional[pl.DataFrame] = None,
+        md5 : Optional[str] = None,
+
+    ) -> Tuple[Optional[pl.DataFrame], Optional[str]] :
+    """
+    
+    """
+    date = str_to_date(date)
+    fund = AEGIS_DISC_FUND_HV if fund is None else fund
+
+    dataframe, md5 = get_im_ctpy_all_history(date, fund) if dataframe is None else (dataframe, md5)
+
+    if dataframe is None :
+        return None
+    
+    available_date = dataframe.filter(pl.col("Date") <= date).select(pl.col("Date").max()).item()
+
+    if available_date is None :
+        return _empty_simm_history_dataframe(AEGIS_IM_ICE_COLUMNS), None
+    
+    dataframe = dataframe.filter(pl.col("Date") == available_date)
+
+    return dataframe, md5, available_date
+
+
+# --------------------- Auxiliar functions ---------------------
 
 def _read_im_all_history (
         
