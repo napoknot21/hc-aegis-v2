@@ -80,8 +80,6 @@ def get_historical_leverage (
     dataframe = dataframe.filter(pl.col(date_column) <= date)
     dataframe = dataframe.drop_nulls()
 
-    print(dataframe)
-
     return dataframe, md5
 
 

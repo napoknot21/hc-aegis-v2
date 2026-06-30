@@ -9,6 +9,24 @@ from typing import Optional
 from src.utils.logger import log
 
 
+def render_plotly_chart (
+        
+        fig : Optional[go.Figure] = None,
+
+    ) -> None :
+    """
+    Render a Plotly chart when data is available.
+    """
+    if fig is None :
+
+        st.write("No chart data available.")
+        return None
+
+    st.plotly_chart(fig, width="content")
+
+    return None
+
+
 def plot_im_by_bank (
         
         _dataframe : Optional[pl.DataFrame] = None,
