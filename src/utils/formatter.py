@@ -20,96 +20,150 @@ from src.utils.logger import log
 def date_to_str (date : Optional[str | dt.date | dt.datetime] = None, format : str = "%Y-%m-%d") -> str :
     """
     Convert a date or datetime object to a string in "YYYY-MM-DD" format.
-
-    Args:
-        date (str | datetime): The input date.
-
-    Returns:
-        str: Date string in "YYYY-MM-DD" format.
+    Never raises: falls back to today's date string on any parsing error
+    or unrecognized type.
     """
-    if date is None:
+    if date is None :
         date_obj = dt.datetime.now()
 
-    elif isinstance(date, dt.datetime):
+    elif isinstance(date, dt.datetime) :
         date_obj = date
 
-    elif isinstance(date, dt.date):  # handles plain date (without time)
-        date_obj = dt.datetime.combine(date, dt.time.min) # This will add 00 for the time
+    elif isinstance(date, dt.date) :  # handles plain date (without time)
+        date_obj = dt.datetime.combine(date, dt.time.min)  # adds 00:00:00
 
     elif isinstance(date, str) :
 
-        try:
+        try :
             date_obj = dt.datetime.strptime(date, format)
 
         except ValueError :
-            
+
             try :
                 date_obj = dt.datetime.fromisoformat(date)
-            
+
             except ValueError :
-                raise ValueError(f"Unrecognized date format: '{date}'")
-    
+
+                log(f"Unrecognized date format: '{date}', falling back to today")
+                date_obj = dt.datetime.now()
+
     else :
-        raise TypeError("date must be a string, datetime, or None")
+
+        log(f"date must be a string, datetime, date or None — got {type(date)}, falling back to today")
+        date_obj = dt.datetime.now()
 
     return date_obj.strftime(format)
 
 
 def str_to_date (date : Optional[str | dt.date | dt.datetime] = None, format : str = "%Y-%m-%d") -> dt.date :
     """
-    
+    Convert a str / date / datetime into a date.
+    Never raises: falls back to today's date on any parsing error or
+    unrecognized type.
     """
     if date is None :
         date_obj = dt.date.today()
-    
-    if isinstance (date, dt.datetime):
+
+    elif isinstance(date, dt.datetime) :  # check BEFORE dt.date (datetime is a subclass of date)
         date_obj = date.date()
 
-    if isinstance(date, dt.date) :
-        date_obj = date
-    
-    if isinstance(date, str) :
-        date_obj = dt.datetime.strptime(date, format).date()
-    
-    return date_obj
-
-
-def str_to_datetime (date : Optional[str | dt.date | dt.datetime] = None, format : str = "%Y-%m-%d %H:%S:M") -> dt.date :
-    """
-    
-    """
-    TIME_DIRECTIVES = ("%H", "%I", "%M", "%S", "%f", "%p")
-
-    if date is None:
-        date_obj = dt.datetime.now()
-    
-    elif isinstance(date, dt.datetime):
+    elif isinstance(date, dt.date) :
         date_obj = date
 
-    elif isinstance(date, dt.date):
-        date_obj = dt.datetime.combine(date, dt.time.max)
-    
     elif isinstance(date, str) :
 
         try :
-            date_obj = dt.datetime.strptime(date, format)
-        
+            date_obj = dt.datetime.strptime(date, format).date()
+
         except ValueError :
 
             try :
-                date_obj = dt.datetime.fromisoformat(date)
-            
+                date_obj = dt.datetime.fromisoformat(date).date()
+
             except ValueError :
-                raise ValueError(f"Unrecognized date format: '{date}'")
 
-        # If neither the format nor the string itself carry time info, zero out the time
-        if not any(d in format for d in TIME_DIRECTIVES) and not any(d in date for d in TIME_DIRECTIVES):
-            date_obj = dt.datetime.combine(date_obj.date(), dt.time.min)
+                log(f"Unrecognized date format: '{date}', falling back to today")
+                date_obj = dt.date.today()
 
-    else:
-        raise TypeError("date must be a string, date, datetime, or None")
-    
+    else :
+
+        log(f"date must be a string, datetime, date or None — got {type(date)}, falling back to today")
+        date_obj = dt.date.today()
+
     return date_obj
+
+
+def str_to_datetime (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        format : str = "%Y-%m-%d %H:%M:%S",
+        mode : str = "min",
+
+    ) -> Optional[dt.datetime] :
+    """
+    Convert a str / date / datetime into a datetime.
+    If `date` is None, returns the current datetime (now).
+    If `date` is a str or a date without time info, time is completed according
+    to `mode`: "min" -> 00:00:00, "max" -> 23:59:59.
+    """
+    completion_time = _datetime_completion_time(mode)
+
+    if date is None :
+        return dt.datetime.now()
+
+    if isinstance(date, dt.datetime) :
+        return date
+
+    if isinstance(date, dt.date) :
+        return dt.datetime.combine(date, completion_time)
+
+    if isinstance(date, str) :
+
+        try :
+            return dt.datetime.strptime(date, format)
+
+        except ValueError :
+
+            try :
+
+                parsed_date = dt.datetime.strptime(date, "%Y-%m-%d").date()
+                return dt.datetime.combine(parsed_date, completion_time)
+
+            except ValueError :
+
+                log(f"Unable to parse '{date}' as datetime with format '{format}'")
+                return dt.datetime.now()
+
+    return dt.datetime.now()
+
+
+def datetime_to_str (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        format : str = "%Y-%m-%d %H:%M:%S",
+        mode : str = "min",
+
+    ) -> Optional[str] :
+    """
+    Convert a str / date / datetime into a formatted datetime string.
+    If `date` is None, uses the current datetime (now).
+    """
+    date = str_to_datetime(date, format=format, mode=mode)
+
+    if date is None :
+        return None
+
+    return date.strftime(format)
+
+
+def _datetime_completion_time (mode : str = "min") -> dt.time :
+    """
+    Return the time used when converting a date-only value into a datetime.
+    """
+    if mode == "min" :
+        return dt.time.min
+
+    return dt.time.max
 
 
 def shift_months (date : Optional[str | dt.date | dt.datetime] = None, months : int = 1) -> dt.date :
@@ -158,7 +212,7 @@ def check_email_format (email : str) -> bool :
     return re.match(email_regex, email) is not None
 
 
-def dataframe_fingerprint (dataframe : pl.DataFrame) -> str:
+def dataframe_fingerprint (dataframe : pl.DataFrame) -> str :
     """
     Deterministic & fast fingerprint based on 64-bit row hashes.
     Uses native polars hashing (no string casting, no CSV roundtrip).

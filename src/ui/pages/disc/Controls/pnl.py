@@ -9,6 +9,14 @@ from src.config.parameters import AEGIS_DISC_FUND_HV
 from src.utils.formatter import str_to_date
 from src.ui.styles.controls import subsections_controls_style
 
+from src.core.data.nav.estimate import (
+    get_nav_estimate_all_history_raw,
+    get_nav_estimate_all_history,
+    get_nav_estimate_values_by_date
+)
+from src.ui.components.graph import plot_nav_dataframe, render_plotly_chart
+from src.ui.components.text import margin_line
+
 
 def pnl (
         
@@ -28,8 +36,8 @@ def pnl (
     """
     
     """
-    historical_performance_section(date, fund)
-    pnl_breaches = risk_sections(date, fund, )
+    historical_performance_section(date, fund, section, icon, style=style)
+    pnl_breaches = risk_sections(date, fund, section, icon, user=user, risks=risks)
     
     return pnl_breaches
 
@@ -39,11 +47,42 @@ def historical_performance_section (
         date : Optional[str | dt.date | dt.datetime] = None,
         fund : Optional[str] = "HV",
 
+        section : str = "P&L",
+        icon : str = "📊",
+
+        title : str = "Historical NAV Estimate",
+        style : str = subsections_controls_style,
+
     ) -> None :
     """
     
     """
-    st.title("Hello Workd")
+    dataframe, md5 = get_nav_estimate_all_history(date, fund)
+    df_date, _, date_real = get_nav_estimate_values_by_date(dataframe, md5, date, fund)
+
+    st.markdown(f'{style}<div class="section-title">{icon} {section} - {date_real}</div>', unsafe_allow_html=True)
+
+
+    if dataframe is None or dataframe.is_empty() :
+
+        st.warning("No NAV estimate data available.")
+        return None
+
+    date_column = "date"
+    value_column = "NAV Estimate"
+
+
+    fig = plot_nav_dataframe(
+        
+        dataframe, md5, title, metrics=[value_column],
+        x_axis=date_column, yaxis_title="GAV (%)", tickformat=".2f",
+    
+    )
+
+    st.plotly_chart(fig)
+    margin_line()
+
+    return None
 
 
 def risk_sections (

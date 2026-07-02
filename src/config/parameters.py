@@ -389,3 +389,18 @@ RENAME_COUNTERPARTY_MAP = {
     AEGIS_ICE_BANK_ANCIENT_NAME_SAXO : AEGIS_ICE_BANK_NAME_SAXO,
 
 }
+
+
+# ---------------------- AEGIS NAV ----------------------
+
+AEGIS_NAV_ESTIMATE_FILENAME = os.getenv("AEGIS_NAV_ESTIMATE_FILENAME")
+
+
+AEGIS_NAV_ESTIMATE_HISTORY_SCHEMA_OVERRIDES = {
+
+    "NAV Estimate": pl.Float64,
+    "NAV Estimate Weighted by Time" : pl.Float64,
+    "file" : pl.Utf8,
+    "date" : pl.Datetime
+
+}

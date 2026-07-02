@@ -3,6 +3,10 @@ cache
 logs
 backup
 data
+!src/core/data/
+!src/core/data/**
+src/core/data/**/__pycache__/
+src/core/data/**/*.pyc
 .toml
 .log
 .venv

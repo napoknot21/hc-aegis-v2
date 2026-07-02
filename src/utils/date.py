@@ -6,43 +6,14 @@ from typing import Optional
 from src.utils.formatter import date_to_str, str_to_date
 
 
-def _previous_weekday(date: dt.date) -> dt.date:
-    """
-    Return the previous weekday strictly before `date`.
-    Weekdays are Monday-Friday.
-    """
-    date = date - dt.timedelta(days=1)
-
-    while date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
-        date = date - dt.timedelta(days=1)
-
-    return date
 
 
-def _next_weekday(date: dt.date) -> dt.date:
-    """
-    Return `date` if it is a weekday, otherwise the next weekday.
-    """
-    while date.weekday() >= 5:
-        date = date + dt.timedelta(days=1)
-
-    return date
-
-
-def _previous_or_same_weekday(date: dt.date) -> dt.date:
-    """
-    Return `date` if it is a weekday, otherwise the previous weekday.
-    """
-    while date.weekday() >= 5:
-        date = date - dt.timedelta(days=1)
-
-    return date
-
-
-def get_previous_bussiness_day(
-    date: Optional[str | dt.datetime | dt.date] = None,
-    format: str = "%Y-%m-%d",
-) -> Optional[dt.date]:
+def get_previous_bussiness_day (
+        
+        date: Optional[str | dt.datetime | dt.date] = None,
+        format: str = "%Y-%m-%d",
+    
+    ) -> Optional[dt.date]:
     """
     Get the previous business day strictly before the given date.
 
@@ -59,10 +30,12 @@ def get_previous_bussiness_day(
     return _previous_weekday(date)
 
 
-def get_ytd_bussiness_day(
-    date: Optional[str | dt.datetime | dt.date] = None,
-    format: str = "%Y-%m-%d",
-) -> Optional[dt.date]:
+def get_ytd_bussiness_day (
+        
+        date: Optional[str | dt.datetime | dt.date] = None,
+        format: str = "%Y-%m-%d",
+    
+    ) -> Optional[dt.date]:
     """
     Get the first business day of the year of the given date.
     """
@@ -76,10 +49,12 @@ def get_ytd_bussiness_day(
     return _next_weekday(start_of_year)
 
 
-def get_qtd_bussiness_day(
-    date: Optional[str | dt.datetime | dt.date] = None,
-    format: str = "%Y-%m-%d",
-) -> Optional[dt.date]:
+def get_qtd_bussiness_day (
+        
+        date: Optional[str | dt.datetime | dt.date] = None,
+        format: str = "%Y-%m-%d",
+    
+    ) -> Optional[dt.date]:
     """
     Get the first business day of the quarter of the given date.
     """
@@ -94,10 +69,12 @@ def get_qtd_bussiness_day(
     return _next_weekday(start_of_quarter)
 
 
-def get_1m_bussiness_day(
-    date: Optional[str | dt.datetime | dt.date] = None,
-    format: str = "%Y-%m-%d",
-) -> Optional[dt.date]:
+def get_1m_bussiness_day (
+        
+        date: Optional[str | dt.datetime | dt.date] = None,
+        format: str = "%Y-%m-%d",
+    
+    ) -> Optional[dt.date]:
     """
     Get the business day one month before the given date.
 
@@ -151,3 +128,76 @@ def get_1w_bussiness_day (
     target_date = date - dt.timedelta(weeks=1)
 
     return _previous_or_same_weekday(target_date)
+
+
+def today_previous_bussiness_day (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        format : str = "%Y-%m-%d",
+
+    ) -> Optional[dt.date] :
+    """
+    Check if a date is a week day or previous business day otherwise from today.
+    """
+    date = str_to_date(date, format)
+
+    if date.weekday() != 5 and date.weekday() != 6:
+        return date
+
+    while date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
+        date = date - dt.timedelta(days=1)
+
+    return date
+
+
+def today_next_bussiness_day (
+        
+        date : Optional[str | dt.datetime | dt.date] = None,
+        format : str = "%Y-%m-%d",
+
+    ) -> Optional[dt.date] :
+    """
+    Check if a date is a week day or previous business day otherwise from today.
+    """
+    date = str_to_date(date, format)
+
+    if date.weekday() != 5 and date.weekday() != 6:
+        return date
+
+    while date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
+        date = date + dt.timedelta(days=1)
+
+    return date
+
+
+def _previous_weekday (date: dt.date) -> dt.date:
+    """
+    Return the previous weekday strictly before `date`.
+    Weekdays are Monday-Friday.
+    """
+    date = date - dt.timedelta(days=1)
+
+    while date.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
+        date = date - dt.timedelta(days=1)
+
+    return date
+
+
+def _next_weekday (date: dt.date) -> dt.date:
+    """
+    Return `date` if it is a weekday, otherwise the next weekday.
+    """
+    while date.weekday() >= 5:
+        date = date + dt.timedelta(days=1)
+
+    return date
+
+
+def _previous_or_same_weekday (date : dt.date) -> dt.date:
+    """
+    Return `date` if it is a weekday, otherwise the previous weekday.
+    """
+    while date.weekday() >= 5:
+        date = date - dt.timedelta(days=1)
+
+    return date

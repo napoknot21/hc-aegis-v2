@@ -4,7 +4,7 @@ import streamlit as st
 import polars as pl
 import plotly.graph_objects as go
 
-from typing import Optional
+from typing import Optional, List, Tuple, Dict
 
 from src.utils.logger import log
 
@@ -185,13 +185,100 @@ def plot_vm_by_bank(
         yaxis=dict(title=yaxis_title, **axis),
         hoverlabel=dict(bgcolor="white", font_color="black", font_size=16),
         legend=dict(title="Bank", y=0.5, yanchor="middle"),
-        **({{"width": width}} if width else {}),
+        **({"width": width} if width else {}),
     )
 
     fig.update_yaxes(ticksuffix=hover_suffix, tickformat=".2f" if pct_mode else ",.0f")
 
     return fig
 
+
+@st.cache_data()
+def plot_nav_dataframe(
+
+        _dataframe: Optional[pl.DataFrame] = None,
+        md5: Optional[str] = None,
+        title: str = "NAV over time",
+
+        x_axis: str = "date",
+        xaxis_title: str = "Date",
+        metrics: Optional[List[str]] = ["NAV Estimate"],
+        yaxis_title: str = "NAV Estimate",
+        tickformat: str = ",.0f",
+
+        height: int = 450,
+        width: Optional[int] = None,
+        rename_metrics: Optional[Dict[str, str]] = None,
+    
+    ) -> Optional[go.Figure]:
+    """
+    Plot NAV series from a prepared dataframe.
+    """
+    if _dataframe is None or _dataframe.is_empty():
+    
+        st.cache_data.clear()
+    
+        log("[-] No NAV dataframe available", "error")
+        return None
+    
+    if not metrics :
+    
+        log("[-] No NAV columns provided to plot", "error")
+        return None
+
+    missing = [column for column in [x_axis, *metrics] if column not in _dataframe.columns]
+    
+    if missing:
+        log(f"[-] Missing NAV columns: {missing}", "error")
+        return None
+
+    dataframe = _dataframe.drop_nulls(subset=[x_axis]).sort(x_axis)
+    if dataframe.is_empty():
+        return None
+
+    rename_metrics = rename_metrics or {}
+
+    fig = go.Figure()
+    for column in metrics:
+        sub = dataframe.drop_nulls(subset=[column])
+        if sub.is_empty():
+            continue
+
+        display_name = rename_metrics.get(column, column)
+
+        fig.add_trace(
+            go.Scatter(
+                x=sub[x_axis].to_list(),
+                y=sub[column].to_list(),
+                mode="lines",
+                name=display_name,
+                line_shape="spline",
+                connectgaps=True,
+                hovertemplate=(
+                    f"<b>{display_name}</b><br>{xaxis_title}: %{{x}}<br>"
+                    f"{yaxis_title}: %{{y:,.2f}}<extra></extra>"
+                ),
+            )
+        )
+
+    if len(fig.data) == 0:
+        return None
+
+    axis = dict(showgrid=True, title_font=dict(size=18), tickfont=dict(size=13))
+    fig.update_layout(
+        title=title,
+        hovermode="x unified",
+        template="plotly_white",
+        height=height,
+        margin=dict(l=0, r=0, t=40, b=0),
+        xaxis=dict(title=xaxis_title, **axis),
+        yaxis=dict(title=yaxis_title, **axis),
+        hoverlabel=dict(bgcolor="white", font_color="black", font_size=16),
+        legend=dict(title="Metric", y=0.5, yanchor="middle"),
+        **({"width": width} if width else {}),
+    )
+    fig.update_yaxes(tickformat=tickformat)
+    return fig
 
 @st.cache_data
 def _prepare_im_vm_data (

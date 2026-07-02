@@ -10,11 +10,18 @@ from src.utils.formatter import str_to_date
 from src.ui.styles.controls import subsections_controls_style, simm_colored_card
 from src.ui.components.text import margin_line
 from src.ui.components.table import render_changes_table
-from src.core.simm import (
-    get_im_ctpy_all_history, get_im_ice_all_history,
-    get_simm_nav_changes_from_date,
-    get_im_ctpy_changes_from_date, get_im_ice_changes_from_date,
-    get_vm_ctpy_changes_from_date, get_vm_ice_changes_from_date,
+from src.core.data.simm.im import (
+    get_im_ctpy_all_history,
+    get_im_ctpy_changes_from_date,
+    get_im_ice_all_history,
+    get_im_ice_changes_from_date,
+)
+from src.core.data.simm.simm import get_simm_nav_changes_from_date
+from src.core.data.simm.vm import (
+    get_vm_ctpy_all_history,
+    get_vm_ctpy_changes_from_date,
+    get_vm_ice_all_history,
+    get_vm_ice_changes_from_date,
 )
 
 from src.ui.components.graph import plot_im_by_bank, plot_vm_by_bank, render_plotly_chart
@@ -259,7 +266,7 @@ def vm_ctpy_section (
     date = str_to_date(date)
     fund = AEGIS_DISC_FUND_HV if fund is None else fund
 
-    dataframe, md5  = get_im_ctpy_all_history(date, fund)
+    dataframe, md5  = get_vm_ctpy_all_history(date, fund)
 
     fig = plot_vm_by_bank(dataframe, md5, bank_col="Bank", value_col="VM", nav_value=nav, title="VM Over Time by Counterparty (Data)")
     render_plotly_chart(fig)
@@ -293,7 +300,7 @@ def vm_ice_section (
 
     rename_map = RENAME_COUNTERPARTY_MAP if rename_map is None else rename_map
 
-    dataframe, md5  = get_im_ice_all_history(date, fund)
+    dataframe, md5  = get_vm_ice_all_history(date, fund)
 
     fig = plot_vm_by_bank(dataframe, md5, bank_col="Counterparty", value_col="MV", nav_value=nav, alias_map=rename_map, title="VM Over Time by Counterparty (ICE)")
     render_plotly_chart(fig)

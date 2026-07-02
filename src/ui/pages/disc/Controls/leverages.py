@@ -6,10 +6,10 @@ import streamlit as st
 from typing import Optional, Dict, Any, List
 
 from src.config.parameters import AEGIS_DISC_FUND_HV, AEGIS_RISKS
-from src.core.risk import build_risk_background_ranges
+from src.core.data.risks.risk import build_risk_background_ranges
 from src.utils.formatter import str_to_date
 
-from src.core.leverages import get_historical_leverage, get_leverage_changes_from_date
+from src.core.data.leverages.leverages import get_historical_leverage, get_leverage_changes_from_date
 
 from src.ui.styles.controls import subsections_controls_style
 from src.ui.components.chart import leverage_line_chart

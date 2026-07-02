@@ -12,7 +12,7 @@ from typing import Optional, Dict, Any, Tuple, List
 
 from src.config.parameters import AEGIS_DISC_FUND_HV, AEGIS_RISKS
 from src.utils.formatter import str_to_date
-from src.core.risk import build_risk_background_ranges
+from src.core.data.risks.risk import build_risk_background_ranges
 
 from src.ui.components.text import margin_line
 from src.ui.styles.controls import subsections_controls_style
@@ -187,7 +187,7 @@ def pnl_section (
     """
     
     """
-    pnl_breaches = pnl(date, fund, section, icon, user, risks)
+    pnl_breaches = pnl(date, fund, section, icon, user=user, risks=risks)
 
     return pnl_breaches
 

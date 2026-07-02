@@ -28,6 +28,6 @@ def get_nav_history_all_history (
     date = str_to_date(date)
     fund = AEGIS_DISC_FUND_HV if fund is None else fund
 
-
-
     return None, None
+
+
